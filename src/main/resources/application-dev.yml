@@ -1,0 +1,17 @@
+server:
+  port: 8081
+
+# ==================== Actuator 端点开关 ====================
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info    # 暴露 health 和 info（默认只 health）
+  endpoint:
+    health:
+      show-details: always      # health 详情始终显示（默认 never 只给 UP/DOWN）
+      show-components: always   # 包含各子组件状态（磁盘、数据库、ping 等）
+  info:
+    env:
+      enabled: true             # 启用 env 来源，info 端点才能读到上面配的 info.app.*
+

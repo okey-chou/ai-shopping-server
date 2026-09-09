@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: ai-shopping-server
+  profiles:
+    active: dev
+    # ==================== 应用元信息（暴露给 /actuator/info） ====================
+info:
+  app:
+    name: ${spring.application.name} # 引用上面的 spring.application.name，避免硬编码
+    version: 1.0.0                       # 后续跟着 Git tag 走，CI/CD 自动注入
+    author: okey-chou                    # 个人标识
+    stage: @project.version@ # 占位：Maven 打包时自动替换为 pom.xml 的 version
