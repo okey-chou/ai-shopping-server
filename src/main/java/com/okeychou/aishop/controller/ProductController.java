@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -25,11 +26,11 @@ public class ProductController {
 
     @GetMapping
     public Result<List<Product>> listByPrice(
-            @RequestParam(required = false) Double min,
-            @RequestParam(required = false) Double max
+            @RequestParam(required = false) BigDecimal min,
+            @RequestParam(required = false) BigDecimal max
     ) {
-        double lo = min == null ? 0.0 : min;
-        double hi = max == null ? Double.MAX_VALUE : max;
+        BigDecimal lo = min == null ? BigDecimal.ZERO : min;
+        BigDecimal hi = max == null ? new BigDecimal("99999999.99") : max;
 
         log.info("访问商品列表: min={}, max={}", lo, hi);  // 入口日志：记输入
 

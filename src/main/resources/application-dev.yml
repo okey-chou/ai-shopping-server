@@ -15,3 +15,6 @@ management:
     env:
       enabled: true             # 启用 env 来源，info 端点才能读到上面配的 info.app.*
 
+
+
+
