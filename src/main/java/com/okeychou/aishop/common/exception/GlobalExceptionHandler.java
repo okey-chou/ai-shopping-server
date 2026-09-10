@@ -5,9 +5,12 @@ import com.okeychou.aishop.common.result.ResultCode;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
@@ -44,6 +47,31 @@ public class GlobalExceptionHandler {
         log.warn("资源不存在: {}", path);          // warn级别:客户端问题,不是服务器故障
         return Result.fail(404, "资源不存在: " + path);
     }
+
+    // 缺少必需参数:如 /api/products/category 没带 category
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Result<Void> handleMissingParam(MissingServletRequestParameterException e) {
+        String msg = "缺少必需参数: " + e.getParameterName();
+        log.warn(msg);                       // warn:客户端问题,不该刷 error 日志
+        return Result.fail(ResultCode.PARAM_ERROR.getCode(), msg);
+    }
+
+    // 参数类型不对:如 ?pageNum=abc、?min=xyz
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public Result<Void> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        String msg = "参数格式错误: " + e.getName() + " = " + e.getValue();
+        log.warn(msg);
+        return Result.fail(ResultCode.PARAM_ERROR.getCode(), msg);
+    }
+
+    // 请求方法不支持:如用 POST 打 GET 接口
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public Result<Void> handleMethodNotSupported(HttpRequestMethodNotSupportedException e) {
+        String msg = "请求方法不支持: " + e.getMethod();
+        log.warn(msg);
+        return Result.fail(405, msg);
+    }
+
 
     // 兜底:所有漏网异常,统一 500
     @ExceptionHandler(Exception.class)

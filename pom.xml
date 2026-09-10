@@ -69,6 +69,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- mybatis-plus-jsqlparser: 解析 SQL 用, 分页插件的依赖 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.17</version>
+        </dependency>
 
     </dependencies>
 
